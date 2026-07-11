@@ -1,6 +1,6 @@
 {
   "name": "rex",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Rex is a free open source tool designed to be used with the game Metal Gear Solid on the original Playstation. It allows the user to extract Dir and Dar archive files packaged with the game",
   "main": "dist/main.js",
   "scripts": {
