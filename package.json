@@ -5,7 +5,8 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "node build.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "release": "npm version major && git push --follow-tags"
   },
   "repository": {
     "type": "git",

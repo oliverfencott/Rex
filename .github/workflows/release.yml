@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            artifact: rex-macos
+            suffix: ""
+          - os: ubuntu-latest
+            artifact: rex-linux
+            suffix: ""
+          - os: windows-latest
+            artifact: rex-windows.exe
+            suffix: ".exe"
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+
+      - run: npm install
+
+      - name: Update version from tag
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          echo "Building version $VERSION"
+
+      - run: npm run build
+
+      - name: Rename binary
+        shell: bash
+        run: |
+          if [ "${{ matrix.suffix }}" = ".exe" ]; then
+            cp dist/rex.exe "dist/${{ matrix.artifact }}"
+          else
+            cp dist/rex "dist/${{ matrix.artifact }}"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect binaries
+        run: |
+          mkdir release
+          cp artifacts/rex-macos/rex-macos release/
+          cp artifacts/rex-linux/rex-linux release/
+          cp artifacts/rex-windows.exe/rex-windows.exe release/
+          chmod +x release/rex-macos release/rex-linux
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            release/rex-macos
+            release/rex-linux
+            release/rex-windows.exe
