@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 permissions:
   contents: write
@@ -15,19 +15,19 @@ jobs:
         include:
           - os: macos-latest
             artifact: rex-macos
-            suffix: ""
+            suffix: ''
           - os: ubuntu-latest
             artifact: rex-linux
-            suffix: ""
+            suffix: ''
           - os: windows-latest
             artifact: rex-windows.exe
-            suffix: ".exe"
+            suffix: '.exe'
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 26
 
@@ -51,7 +51,7 @@ jobs:
         shell: bash
         run: cp dist/rex "dist/${{ matrix.artifact }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.artifact }}
           path: dist/${{ matrix.artifact }}
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v6
         with:
           path: artifacts
 
