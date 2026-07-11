@@ -1,14 +1,34 @@
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { basename, dirname, extname, join, resolve } from 'path';
 
+function readPkg(): { name: string; version: string } {
+  const candidates = [
+    join(__dirname, '..', 'package.json'),
+    join(dirname(process.argv[0]), '..', 'package.json'),
+    join(process.cwd(), 'package.json')
+  ];
+  for (const p of candidates) {
+    try {
+      return JSON.parse(readFileSync(p, 'utf-8'));
+    } catch {
+      // impure
+      continue;
+    }
+  }
+  return { name: 'rex', version: 'unknown' };
+}
+
+const pkg = readPkg();
+
 // --- CLI ---
+console.log(`${pkg.name} v${pkg.version}`);
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
   // impure
   console.log(`
 Usage:
-  rex <STAGE.DIR|file.dar> [OUTPUTDIRECTORY]
+  ${pkg.name} <STAGE.DIR|file.dar> [OUTPUTDIRECTORY]
 `);
   // impure
   process.exit(0);
