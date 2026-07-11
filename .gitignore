@@ -1,7 +1,2 @@
-.vs/
-Debug/
-Release/
-X64/
-mgs/3rdparty/zlib/zconf.h
-mgs/3rdparty/zlib/zlib.h
-mgs/3rdparty/zlib/zlib.lib
+node_modules/
+dist/
