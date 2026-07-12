@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-latest
+          - os: macos-15
             artifact: rex-macos
             suffix: ''
           - os: ubuntu-latest
