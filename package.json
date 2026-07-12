@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "tsc --noEmit",
+    "test": "node test/test-roundtrip.mjs",
     "release": "npm version major && git push --follow-tags"
   },
   "repository": {

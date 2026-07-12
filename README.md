@@ -2,7 +2,7 @@
 
 A fork of [Jayveer/Rex](https://github.com/Jayveer/Rex), rewritten in TypeScript/Node.js with cross-platform builds.
 
-Rex extracts DIR and DAR archive files from Metal Gear Solid on the original PlayStation.
+Rex extracts and re-packs DIR and DAR archive files from Metal Gear Solid on the original PlayStation.
 
 ## Install
 
@@ -18,60 +18,52 @@ Download the latest binary for your platform from [Releases](https://github.com/
 
 ## CLI Usage
 
-### macOS
+All features require an explicit flag. Running `rex` with no flags prints the usage message.
+
+### Extract (`-x`, `--extract`)
+
+Extract a DAR or DIR archive to a directory.
 
 ```sh
 # Extract a DAR file
-./rex path/to/file.dar
+rex -x path/to/file.dar
 
 # Extract a DIR file
-./rex path/to/stage.dir
+rex -x path/to/stage.dir
 
 # Specify an output directory
-./rex path/to/stg_tex1.dar path/to/output
+rex -x path/to/file.dar path/to/output
 ```
 
-After unzipping, you may need to make the binary executable:
+### Pack (`-p`, `--pack`)
+
+Re-pack an extracted stage directory back into a `.dir` file. The input directory should contain page subdirectories (as produced by `-x`).
+
+```sh
+# Re-pack a directory into a STAGE.DIR file
+rex -p path/to/s01a
+
+# Specify an output directory
+rex -p path/to/s01a path/to/output
+```
+
+If no output path is given, `STAGE.DIR` is written into the input directory.
+
+### Help (`-h`, `--help`)
+
+```sh
+rex -h
+```
+
+### Platform Notes
+
+After unzipping on macOS/Linux, you may need to make the binary executable:
 
 ```sh
 chmod +x rex
 ```
 
-### Linux
-
-```sh
-# Extract a DAR file
-./rex path/to/file.dar
-
-# Extract a DIR file
-./rex path/to/stage.dir
-
-# Specify an output directory
-./rex path/to/stg_tex1.dar path/to/output
-```
-
-### Windows
-
-```
-REM Extract a DAR file
-rex.exe path\to\file.dar
-
-REM Extract a DIR file
-rex.exe path\to\stage.dir
-
-REM Specify an output directory
-rex.exe path\to\stg_tex1.dar path\to\output
-```
-
-You can also drag and drop a file onto the executable.
-
-### All Platforms
-
-```
-rex [STAGE.DIR|file.dar] [OUTPUTDIRECTORY]
-```
-
-An optional output path can be added at the end. If omitted, files extract to the directory of the input file.
+On Windows, you can also drag and drop a file onto the executable, but you must still pass the appropriate flag.
 
 ## Note
 
